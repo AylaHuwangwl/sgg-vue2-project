@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import home from "./home";
+import home from "./home/home";
 // 使用插件一次
 Vue.use(Vuex);
 // 仓库存储数据的地方

@@ -1,10 +1,12 @@
 <template>
   <div class="type-nav">
     <div class="container">
-      <div @mouseleave="leaveIndex">
+      <div @mouseleave="leaveIndex" @mouseenter="enterShow">
         <h2 class="all">全部商品分类</h2>
-        <div class="sort">
-          <div class="all-sort-list2">
+        <transition name="sort">
+        <div class="sort" v-show="show">
+          <div class="all-sort-list2" @click="goSearch">
+            <!-- 用js控制图片 -->
             <div
               class="item"
               v-for="(c1, index) in categoryList"
@@ -12,24 +14,36 @@
               :class="{ cur: currentIndex === index }"
             >
               <h3 @mouseenter="changeIndex(index)">
-                <a href="">{{ c1.categoryName }}</a>
+                <a
+                  :data-categoryName="c1.categoryName"
+                  :data-category1Id="c1.categoryId"
+                  >{{ c1.categoryName }}</a
+                >
               </h3>
-              <div class="item-list clearfix" :style="{display:currentIndex==index?'block':'none'}">
+              <div
+                class="item-list clearfix"
+                :style="{ display: currentIndex == index ? 'block' : 'none' }"
+              >
                 <div
                   class="subitem"
-                  v-for="(c2, index) in c1.categoryChild"
+                  v-for="c2 in c1.categoryChild"
                   :key="c2.categoryId"
                 >
                   <dl class="fore">
                     <dt>
-                      <a href="">{{ c2.categoryName }}</a>
+                      <a
+                        :data-categoryName="c2.categoryName"
+                        :data-category2Id="c2.categoryId"
+                        >{{ c2.categoryName }}</a
+                      >
                     </dt>
                     <dd>
-                      <em
-                        v-for="(c3, index) in c2.categoryChild"
-                        :key="c3.categoryId"
-                      >
-                        <a href="">{{ c3.categoryName }}</a>
+                      <em v-for="c3 in c2.categoryChild" :key="c3.categoryId">
+                        <a
+                          :data-categoryName="c3.categoryName"
+                          :data-category3Id="c3.categoryId"
+                          >{{ c3.categoryName }}</a
+                        >
                       </em>
                     </dd>
                   </dl>
@@ -38,6 +52,7 @@
             </div>
           </div>
         </div>
+        </transition>
       </div>
       <nav class="nav">
         <a href="###">服装城</a>
@@ -55,29 +70,68 @@
 
 <script>
 import { mapState } from "vuex";
+// 引入lodash的全部功能
+// import _ from "lodash";
+// 按需引入,默认暴露，不需加{}
+import throttle from "lodash/throttle";
 export default {
   name: "TypeNav",
   data() {
     return {
       currentIndex: -1,
+      // 控制三级菜单是否展示
+      show: true,
     };
   },
   mounted() {
-    // 组件挂载完毕向服务器发送请求
-    this.$store.dispatch("getCategoryList");
+    // // 组件挂载完毕向服务器发送请求
+    // this.$store.dispatch("getCategoryList");
+    // 如果不是home页面则隐藏
+    if (this.$route.path != "/home") this.show = false;
   },
   computed: {
     //state:他是咱们大仓库中的state（包含home|search）
     ...mapState({
-      categoryList: (state) => state.home.categoryList.splice(0, 16),
+      categoryList: (state) => state.home.categoryList,
     }),
   },
   methods: {
-    changeIndex(index) {
+    // 鼠标移入时
+    // 正常情况：鼠标慢慢进入每个h3都会触发进入事件
+    // 非正常情况：用户操作过快导致浏览器反应不过来
+    // 防抖：停止连续触发达到规定时间才会执行
+    // 节流：将频繁触发变为少量触发，给浏览器充足的时间解析代码
+    changeIndex: throttle(function (index) {
       this.currentIndex = index;
-    },
+    }, 50),
+    // 鼠标离开时
     leaveIndex() {
       this.currentIndex = -1;
+      if (this.$route.path != "/home") this.show = false;
+    },
+    goSearch(event) {
+      let element = event.target;
+      let { categoryname, category1id, category2id, category3id } =
+        element.dataset;
+      if (categoryname) {
+        let location = { name: "search" };
+        let query = { categoryname: categoryname };
+        if (category1id) {
+          query.category1id = category1id;
+        } else if (category2id) {
+          query.category2id = category2id;
+        } else if (category3id) {
+          query.category3id = category3id;
+        }
+        if(this.$route.params){
+          location.params = this.$route.params;
+        }
+        location.query = query;
+        this.$router.push(location);
+      }
+    },
+    enterShow() {
+      this.show = true;
     },
   },
 };
@@ -119,7 +173,7 @@ export default {
       left: 0;
       top: 45px;
       width: 210px;
-      height: 461px;
+      height: 480px;
       position: absolute;
       background: #fafafa;
       z-index: 999;
@@ -203,6 +257,18 @@ export default {
           background-color: skyblue;
         }
       }
+    }
+    // 过渡动画开始阶段
+    .sort-enter{
+      height:0px;
+    }
+    // 过渡动画结束阶段
+    .sort-enter-to{
+      height:480px;
+    }
+  // 过渡动画样式
+    .sort-enter-active{
+      transition: all 0.5s linear;
     }
   }
 }

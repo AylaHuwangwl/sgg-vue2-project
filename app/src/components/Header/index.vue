@@ -39,7 +39,11 @@
             class="input-error input-xxlarge"
             v-model="keyword"
           />
-          <button class="sui-btn btn-xlarge btn-danger" type="button" @click="goSearch">
+          <button
+            class="sui-btn btn-xlarge btn-danger"
+            type="button"
+            @click="goSearch"
+          >
             搜索
           </button>
         </form>
@@ -49,33 +53,36 @@
 </template>
 
 <script>
-
 export default {
   name: "",
-  data(){
-    return{
-    keyword:"",
-    }
+  data() {
+    return {
+      keyword: "",
+    };
   },
-  methods:{
-    goSearch(){
+  methods: {
+    goSearch() {
       // this.$router.push("/search"+this.keyword)
       // 路由传参对象写法
       // this.$router.push({
-      //   name:"search", 
+      //   name:"search",
       //   params:{keyword:this.keyword},
       //   query:{
       //     k:this.keyword.toUpperCase()
       //   }
       // })
-      // 路由传递参数写法是否能结合path和params一起使用:不能
-      this.$router.push({
-        name:"search", 
-        params:{keyword:this.keyword},
-        query:{keyword:this.keyword.toUpperCase()}
-      })
+      // 路由传递参数写法是否能结合path和params一起使用:不能\
+      if (this.$route.query) {
+        let location = {
+          name: "search",
+          params: { keyword: this.keyword || undefined },
+        };
+        location.query = this.$route.query;
+        console.log(location);
+        this.$router.push(location);
+      }
     },
-  }
+  },
 };
 </script>
 
