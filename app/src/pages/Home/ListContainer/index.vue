@@ -3,10 +3,14 @@
     <div class="sortList clearfix">
       <div class="center">
         <!--banner轮播-->
-        <div class="swiper-container" id="mySwiper">
+        <!-- <div class="swiper-container" id="mySwiper">
           <div class="swiper-wrapper">
-            <div class="swiper-slide">
-              <img src="./images/banner1.jpg" />
+            <div
+              class="swiper-slide"
+              v-for="(carousel, index) in bannerList"
+              :key="carousel.id"
+            >
+              <img :src="carousel.imgUrl" />
             </div>
             <!-- <div class="swiper-slide">
               <img src="./images/banner2.jpg" />
@@ -17,14 +21,15 @@
             <div class="swiper-slide">
               <img src="./images/banner4.jpg" />
             </div> -->
-          </div>
+          <!-- </div> -->
           <!-- 如果需要分页器 -->
-          <div class="swiper-pagination"></div>
+          <!-- <div class="swiper-pagination"></div> -->
 
           <!-- 如果需要导航按钮 -->
-          <div class="swiper-button-prev"></div>
-          <div class="swiper-button-next"></div>
-        </div>
+          <!-- <div class="swiper-button-prev"></div> -->
+          <!-- <div class="swiper-button-next"></div> -->
+        <!-- </div> --> 
+          <Carsousel :list="bannerList" />
       </div>
       <div class="right">
         <div class="news">
@@ -100,11 +105,79 @@
 </template>
 
 <script>
+import Swiper from "swiper";
+import { mapState } from "vuex";
 export default {
   name: "",
-  mounted(){
-    this.$store.dispatch('getBannerist')
+  mounted() {
+    this.$store.dispatch("getBannerist");
+    // 放在mounted中的话组件数据还未修改，但是已经获取到axios中的数据了，所以最终通过watch（监听已有数据的变化）
+    // 轮播图需要有实例才可以使用，且界面中的结构需要已经有了，可以放在update中也可以放在定时器中
+    //   setTimeout(() => {
+    //     var mySwiper = new Swiper(document.querySelector('.swiper-container'), {
+    //       // direction: 'vertical', // 垂直切换选项
+    //       loop: true, // 循环模式选项
+
+    //       // 如果需要分页器
+    //       pagination: {
+    //         el: ".swiper-pagination",
+    //         clickable: true,
+    //       },
+
+    //       // 如果需要前进后退按钮
+    //       navigation: {
+    //         nextEl: ".swiper-button-next",
+    //         prevEl: ".swiper-button-prev",
+    //       },
+
+    //       // 如果需要滚动条
+    //       scrollbar: {
+    //         el: ".swiper-scrollbar",
+    //       },
+    //     });
+    //   }, 1000);
   },
+  computed: {
+    ...mapState({
+      bannerList: (state) => state.home.bannerList,
+    }),
+  },
+  // watch: {
+  //   // 用watch和nextTick结合
+  //   bannerList: {
+  //     immediate:true,
+  //     // 这里监听只能确定bannerList里面有数据，但不能确定v-for已经遍历完成
+  //     handler(newValue, oldValue) {
+  //       // 在下次 DOM 更新循环结束（（v-for结束）之后执行延迟回调。在修改数据之后立即使用这个方法，获取更新后的 DOM。
+  //       this.$nextTick(() => {
+  //         var mySwiper = new Swiper(
+  //           document.querySelector(".swiper-container"),
+  //           {
+  //             // direction: 'vertical', // 垂直切换选项
+  //             loop: true, // 循环模式选项
+
+  //             // 如果需要分页器
+  //             pagination: {
+  //               el: ".swiper-pagination",
+  //               clickable: true,
+  //             },
+
+  //             // 如果需要前进后退按钮
+  //             navigation: {
+  //               nextEl: ".swiper-button-next",
+  //               prevEl: ".swiper-button-prev",
+  //             },
+
+  //             // 如果需要滚动条
+  //             scrollbar: {
+  //               el: ".swiper-scrollbar",
+  //             },
+  //           }
+  //         );
+  //       });
+  //     },
+  //   },
+  // },
 };
 </script>
 

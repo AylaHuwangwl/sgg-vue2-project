@@ -19,6 +19,7 @@ requests.interceptors.response.use(
   (res) =>{
   // 进度条结束
   nProgress.done();
+  return res.data;
 },(error)=>{
   // 服务器响应失败回调信息
   return Promise.reject(new Error('faile'))

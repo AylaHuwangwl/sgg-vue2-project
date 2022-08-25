@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import home from "./home/home";
+import search from "./search/search";
 // 使用插件一次
 Vue.use(Vuex);
 // 仓库存储数据的地方
@@ -18,6 +19,7 @@ export default new Vuex.Store({
   //模块：把小仓库进行合并变为大仓库
   modules: {
     home,
+    search,
   },
   namespaced:true
 });

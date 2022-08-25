@@ -78,7 +78,6 @@ export default {
           params: { keyword: this.keyword || undefined },
         };
         location.query = this.$route.query;
-        console.log(location);
         this.$router.push(location);
       }
     },

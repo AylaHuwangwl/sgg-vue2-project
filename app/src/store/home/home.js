@@ -1,11 +1,13 @@
 import {
   reqgetCategoryList,
-  reqGetBannerList
+  reqGetBannerList,
+  reqFloorList,
 } from "@/api";
 const state = {
   // 服务器返回的数据就是数组，服务器返回什么初始值就是什么
   categoryList: [],
   bannerList: [],
+  floorList:[],
 };
 const mutations = {
   GETCATEGORYLIST(state, categoryList) {
@@ -14,6 +16,9 @@ const mutations = {
   GETBANNERLIST(state, bannerList) {
     state.bannerList = bannerList;
   },
+  GETFLOORLIST(state,floorList){
+    state.floorList = floorList;
+  }
 };
 const actions = {
   async getCategoryList({
@@ -32,11 +37,19 @@ const actions = {
     //reqgetCategoryList返回的是一个Promise对象
     //需要用await接受成功返回的结果，await必须要结合async一起使用（CP）
     let result = await reqGetBannerList();
-    console.log(result);
-    // if (result.code == 200) {
-    //   commit("GETBANNERLIST", result.data);
-    // }
+    // console.log(result);
+    if (result.code == 200) {
+      commit("GETBANNERLIST", result.data);
+    }
   },
+  async getFloorList({
+    commit
+  }){
+    let result = await reqFloorList();
+    if(result.code == 200){
+      commit("GETFLOORLIST",result.data)
+    }
+  }
 };
 const getters = {};
 export default {
