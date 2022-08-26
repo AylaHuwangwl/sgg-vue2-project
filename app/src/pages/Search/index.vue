@@ -11,38 +11,52 @@
             </li>
           </ul>
           <ul class="fl sui-tag">
-            <li class="with-x">手机</li>
-            <li class="with-x">iphone<i>×</i></li>
-            <li class="with-x">华为<i>×</i></li>
-            <li class="with-x">OPPO<i>×</i></li>
+            <li class="with-x" v-if="searchParams.categoryName">
+              {{ searchParams.categoryName
+              }}<i @click="removeCategoryList">×</i>
+            </li>
+            <li class="with-x" v-if="searchParams.keyword">
+              {{ searchParams.keyword }}<i @click="removeCategoryKeyword">×</i>
+            </li>
+            <li class="with-x" v-if="searchParams.trademark">
+              {{ searchParams.trademark.split(":")[1]
+              }}<i @click="removeCategoryTrademark">×</i>
+            </li>
+            <li class="with-x" v-for="(attrValue, index) in searchParams.props">
+              {{ attrValue.split(":")[1]
+              }}<i @click="removeCategoryAttr(index)">×</i>
+            </li>
           </ul>
         </div>
 
         <!--selector-->
-        <SearchSelector />
+        <SearchSelector
+          @trademark="getTradeMarkName"
+          @attrInfo="getAttrInfo"
+        ></SearchSelector>
 
         <!--details-->
         <div class="details clearfix">
           <div class="sui-navbar">
             <div class="navbar-inner filter">
               <ul class="sui-nav">
-                <li class="active">
-                  <a href="#">综合</a>
+                <li :class="{ active: isOne }" @click="changeOrder('1')">
+                  <a href="#"
+                    >综合<span
+                      v-show="isOne"
+                      class="iconfont"
+                      :class="{ 'icon-UP': isAsc, 'icon-DOWN': isDesc }"
+                    ></span
+                  ></a>
                 </li>
-                <li>
-                  <a href="#">销量</a>
-                </li>
-                <li>
-                  <a href="#">新品</a>
-                </li>
-                <li>
-                  <a href="#">评价</a>
-                </li>
-                <li>
-                  <a href="#">价格⬆</a>
-                </li>
-                <li>
-                  <a href="#">价格⬇</a>
+                <li :class="{ active: isTwo }" @click="changeOrder('2')">
+                  <a href="#"
+                    >价格<span
+                      v-show="isTwo"
+                      class="iconfont"
+                      :class="{ 'icon-UP': isAsc, 'icon-DOWN': isDesc }"
+                    ></span
+                  ></a>
                 </li>
               </ul>
             </div>
@@ -56,7 +70,7 @@
               >
                 <div class="list-wrap">
                   <div class="p-img">
-                    <a href="item.html" target="_blank"
+                    <a @click="toDetails(good.id)" target="_blank"
                       ><img :src="good.defaultImg"
                     /></a>
                   </div>
@@ -92,35 +106,13 @@
               </li>
             </ul>
           </div>
-          <div class="fr page">
-            <div class="sui-pagination clearfix">
-              <ul>
-                <li class="prev disabled">
-                  <a href="#">«上一页</a>
-                </li>
-                <li class="active">
-                  <a href="#">1</a>
-                </li>
-                <li>
-                  <a href="#">2</a>
-                </li>
-                <li>
-                  <a href="#">3</a>
-                </li>
-                <li>
-                  <a href="#">4</a>
-                </li>
-                <li>
-                  <a href="#">5</a>
-                </li>
-                <li class="dotted"><span>...</span></li>
-                <li class="next">
-                  <a href="#">下一页»</a>
-                </li>
-              </ul>
-              <div><span>共10页&nbsp;</span></div>
-            </div>
-          </div>
+          <Pagination
+            :pageNo="searchParams.pageNo"
+            :pageSize="3"
+            :total="total"
+            :continues="5"
+            @getPageNo="getPageNo"
+          />
         </div>
       </div>
     </div>
@@ -129,7 +121,7 @@
 
 <script>
 import SearchSelector from "./SearchSelector/SearchSelector";
-// import { mapState } from "vuex";
+import { mapState } from "vuex";
 import { mapGetters } from "vuex";
 export default {
   name: "Search",
@@ -139,44 +131,138 @@ export default {
   data() {
     return {
       searchParams: {
-        category1Id:"",
+        category1Id: "",
         category2Id: "",
         category3Id: "",
         categoryName: "",
         keyword: "",
-        order: "",
+        order: "1:desc",
         pageNo: 1,
         pageSize: 10,
         // 平台售卖属性参数
         props: [],
-        // 
+        //
         trademark: "",
       },
     };
   },
-  beforeMount(){
+  beforeMount() {
     // 使用Object.assign
-    Object.assign(this.searchParams,this.$route.query,this.$route.params)
+    Object.assign(this.searchParams, this.$route.query, this.$route.params);
   },
   mounted() {
     this.getData();
+    console.log(this.goodsList);
   },
   computed: {
     // mapGetters里面不划分模块，写法：传的是数组
     ...mapGetters(["goodsList"]),
+    ...mapState({
+      total: (state) => state.search.searchList.total,
+    }),
+    isOne() {
+      return this.searchParams.order.indexOf("1") != -1;
+    },
+    isTwo() {
+      return this.searchParams.order.indexOf("1") == -1;
+    },
+    isAsc() {
+      return this.searchParams.order.indexOf("asc") != -1;
+    },
+    isDesc() {
+      return this.searchParams.order.indexOf("desc") != -1;
+    },
   },
   methods: {
+    //自定义事件的回调函数---获取当前第几页
+    getPageNo(pageNo) {
+      //整理带给服务器参数
+      this.searchParams.pageNo = pageNo;
+      //再次发请求
+      this.getData();
+    },
     getData() {
       this.$store.dispatch("getSearchList", this.searchParams);
     },
-  },
-  watch:{
-    // 监听路由信息，变化就再次发请求
-    $route(newValue,oldValue){
-      Object.assign(this.searchParams,this.$route.query,this.$route.params);
+    getTradeMarkName(trademark) {
+      this.searchParams.trademark = `${trademark.tmId}:${trademark.tmName}`;
       this.getData();
-    }
-  }
+    },
+    getAttrInfo(attr, attrValue) {
+      let props = `${attr.attrId}:${attrValue}:${attr.attrName}`;
+      // this.searchParams.props = [attrInfo[0].attrId+':'+attrInfo[1]+":"+attrInfo[0].attrName];
+      // console.log(this.searchParams.props);
+      // 数组去重
+      if (this.searchParams.props.indexOf(props) == -1)
+        this.searchParams.props.push(props);
+      this.getData();
+    },
+    removeCategoryList() {
+      this.searchParams.categoryName = undefined;
+      this.searchParams.category1Id = undefined;
+      this.searchParams.category2Id = undefined;
+      this.searchParams.category3Id = undefined;
+      // this.$route.query = {};
+      // this.$route.params = {};
+      this.getData();
+      // 参数便路由也要变
+      this.$router.push({
+        name: "search",
+        params: this.$route.params,
+      });
+    },
+    removeCategoryKeyword() {
+      this.searchParams.keyword = undefined;
+      this.$bus.$emit("clear");
+      // Hearder组件的搜索框的关键字也要清楚，与Search组件为兄弟组件
+      this.getData();
+      this.$router.push({
+        name: "search",
+        query: this.$route.query,
+      });
+    },
+    removeCategoryTrademark() {
+      this.searchParams.trademark = undefined;
+      this.getData();
+    },
+    removeCategoryAttr(index) {
+      this.searchParams.props.splice(index, 1);
+      this.getData();
+    },
+    changeOrder(flag) {
+      let originOrder = this.searchParams.order;
+      let orginsFlag = originOrder.split(":")[0];
+      let originSort = originOrder.split(":")[1];
+      //新的排序方式
+      let newOrder = "";
+      //判断的是多次点击的是不是同一个按钮
+      if (flag == orginsFlag) {
+        newOrder = `${orginsFlag}:${originSort == "desc" ? "asc" : "desc"}`;
+      } else {
+        //点击不是同一个按钮
+        newOrder = `${flag}:${"desc"}`;
+      }
+      //需要给order重新赋值
+      this.searchParams.order = newOrder;
+      //再次发请求
+      this.getData();
+    },
+    toDetails(id) {
+      this.$router.push({ path: "/details", query: { id: id } });
+    },
+  },
+  watch: {
+    // 监听路由信息，变化就再次发请求
+    $route(newValue, oldValue) {
+      // 每次请求完毕把其他参数清空
+      Object.assign(this.searchParams, this.$route.query, this.$route.params);
+      this.getData();
+      this.searchParams.category1Id = undefined;
+      this.searchParams.category2Id = undefined;
+      this.searchParams.category3Id = undefined;
+      // Object.assign(this.searchParams,{category1Id:'',category2Id:'',category3Id:''});
+    },
+  },
 };
 </script>
 
