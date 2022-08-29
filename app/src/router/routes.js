@@ -3,6 +3,8 @@ import Search from '@/pages/Search/index.vue';
 import Login from '@/pages/Login/index.vue';
 import Register from '@/pages/Register/index.vue';
 import Details from '@/pages/Details/index.vue';
+import AddCartSuccess from '@/pages/AddCartSuccess/index.vue';
+import ShopCart from '@/pages/ShopCart/index.vue';
 export default [{
     path: "/home",
     component: Home,
@@ -36,6 +38,21 @@ export default [{
   {
     path: "/details",
     component: Details,
+    meta: {
+      show: true
+    },
+  },
+  // 路由路径小写
+  {
+    path: "/addcartsuccess",
+    component: AddCartSuccess,
+    meta: {
+      show: true
+    },
+  },
+  {
+    path: "/shopcart",
+    component: ShopCart,
     meta: {
       show: true
     },

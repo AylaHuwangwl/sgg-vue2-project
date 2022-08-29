@@ -110,7 +110,7 @@
             :pageNo="searchParams.pageNo"
             :pageSize="3"
             :total="total"
-            :continues="5"
+            :continues="3"
             @getPageNo="getPageNo"
           />
         </div>
@@ -138,7 +138,7 @@ export default {
         keyword: "",
         order: "1:desc",
         pageNo: 1,
-        pageSize: 10,
+        pageSize: 3,
         // 平台售卖属性参数
         props: [],
         //
@@ -152,7 +152,6 @@ export default {
   },
   mounted() {
     this.getData();
-    console.log(this.goodsList);
   },
   computed: {
     // mapGetters里面不划分模块，写法：传的是数组
@@ -247,6 +246,7 @@ export default {
       //再次发请求
       this.getData();
     },
+    // 此处用的是query参数，在项目中用
     toDetails(id) {
       this.$router.push({ path: "/details", query: { id: id } });
     },

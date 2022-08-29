@@ -6,4 +6,20 @@ export const reqGetBannerList = () => mockRequests.get("/banner");
 //获取floor数据
 export const reqFloorList = () => mockRequests.get("/floor");
 // search界面请求数据，需要带参数,参数至少是一个空对象
-export const reqGetSearchInfo = (params)=>requests({url:"/list",method:"post",data:params});
+export const reqGetSearchInfo = (params) => requests({
+  url: "/list",
+  method: "post",
+  data: params
+});
+export const reqGetDetails = (skuId) => requests({
+  url: `/item/${skuId}`,
+  method: "get"
+});
+export const reqAddOrUpdateShopCart = (skuId, skuNum) => requests({
+  url: `/cart/addToCart/${skuId}/${skuNum}`,
+  method: "post"
+});
+export const reqCartList = () => requests({
+  url: '/cart/cartList ',
+  method: 'get'
+});
