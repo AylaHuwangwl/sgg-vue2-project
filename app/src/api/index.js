@@ -23,3 +23,18 @@ export const reqCartList = () => requests({
   url: '/cart/cartList ',
   method: 'get'
 });
+//URL:/api/cart/checkCart/{skuId}/{isChecked}   method:get 
+export const reqUpdateCheckedByid = (skuId, isChecked) => requests({
+  url: `/cart/checkCart/${skuId}/${isChecked}`,
+  method: 'get'
+});
+// 删除购物车商品
+export const reqDeleteCartById = (skuId) => requests({
+  url: `/cart/checkCart/${skuId}`,
+  method: 'delete'
+});
+// 获取验证码
+export const reqGetCode = (phone) => requests({
+  url: `/user/passport/sendCode/${phone}`,
+  method: 'get'
+});
