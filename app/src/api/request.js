@@ -14,6 +14,10 @@ requests.interceptors.request.use((config) => {
     //请求头添加一个字段(userTempId):和后台老师商量好了(用户临时ID)
     config.headers.userTempId = store.state.details.uuid_token;
   }
+  // 需要携带token给服务器
+  if(store.state.user.token){
+    config.headers.token = store.state.user.token;
+  }
   // 进度条开始
   nProgress.start();
   return config;

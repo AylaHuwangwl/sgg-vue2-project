@@ -5,6 +5,8 @@ import search from "./search/search";
 import details from "./details/details";
 import shopcart from "./shopcart/shopcart";
 import user from "./user/user";
+import trade from "./trade/trade";
+
 // 使用插件一次
 Vue.use(Vuex);
 // 仓库存储数据的地方
@@ -26,6 +28,7 @@ export default new Vuex.Store({
     details,
     shopcart,
     user,
+    trade,
   },
   namespaced:true
 });

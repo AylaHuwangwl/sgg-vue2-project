@@ -5,11 +5,17 @@
       <div class="container">
         <div class="loginList">
           <p>尚品汇欢迎您！</p>
-          <p>
+          <!-- 未登录 -->
+          <p v-if="!userName">
             <span>请</span>
             <!-- <a href="###">登录</a> -->
             <router-link to="/login">登录</router-link>
             <router-link class="register" to="/register">免费注册</router-link>
+          </p>
+          <!-- 登陆了 -->
+          <p v-else>
+            <a >{{userName}}</a>
+            <a class="register" @click="logout">退出登录</a>
           </p>
         </div>
         <div class="typeList">
@@ -69,7 +75,7 @@ export default {
     goSearch() {
       // this.$router.push("/search"+this.keyword)
       // 路由传参对象写法
-      // this.$router.push({
+      // this.$router.push({ 
       //   name:"search",
       //   params:{keyword:this.keyword},
       //   query:{
@@ -86,7 +92,19 @@ export default {
         this.$router.push(location);
       }
     },
+   async logout(){
+    try {
+    await  this.$store.dispatch('userLogout');
+    this.$router.push('/home');
+    } catch (error) {
+    }
+    },
   },
+  computed:{
+    userName(){
+      return this.$store.state.user.userInfo.name;
+    }
+  }
 };
 </script>
 

@@ -38,3 +38,43 @@ export const reqGetCode = (phone) => requests({
   url: `/user/passport/sendCode/${phone}`,
   method: 'get'
 });
+export const reqUserRegister = (data) => requests({
+  url: `/user/passport/register`,
+  method: 'post',
+  data,
+})
+export const reqUserLogin = (data) => requests({
+  url: `/user/passport/login`,
+  method: 'post',
+  data,
+})
+// 获取用户信息
+export const reqUserInfo = () => requests({
+  url: '/user/passport/auth/getUserInfo',
+  method: 'get'
+});
+//退出登录
+//URL:/api/user/passport/logout  get
+export const reqLogout = () => requests({
+  url: '/user/passport/logout',
+  method: 'get'
+});
+//获取用户地址信息
+//URL:/api/user/userAddress/auth/findUserAddressList  method:get
+export const reqAddressInfo = () => requests({
+  url: '/user/userAddress/auth/findUserAddressList',
+  method: 'get'
+});
+//获取商品清单
+//URL:/api/order/auth/trade   method:get
+export const reqOrderInfo = () => requests({
+  url: '/order/auth/trade',
+  method: 'get'
+});
+//提交订单的接口
+//URL:/api/order/auth/submitOrder?tradeNo={tradeNo}  method:post
+export const reqSubmitOrder = (tradeNo, data) => requests({
+  url: `/order/auth/submitOrder?tradeNo=${tradeNo}`,
+  data,
+  method: 'post'
+});

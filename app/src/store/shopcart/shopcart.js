@@ -18,7 +18,6 @@ const actions = {
   //删除购物车某一个产品
   async deleteCartListBySkuId({ commit }, skuId) {
     let result = await reqDeleteCartById(skuId);
-    console.log(result);
     if (result.code == 200) {
       return "ok";
     } else {
@@ -47,7 +46,6 @@ const actions = {
       //将每一次返回的Promise添加到数组当中
       PromiseAll.push(promise);
     });
-    console.log(PromiseAll);
     //只要全部的p1|p2....都成功，返回结果即为成功
     //如果有一个失败，返回即为失败结果
     return Promise.all(PromiseAll);

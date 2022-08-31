@@ -5,6 +5,8 @@ import Register from '@/pages/Register/index.vue';
 import Details from '@/pages/Details/index.vue';
 import AddCartSuccess from '@/pages/AddCartSuccess/index.vue';
 import ShopCart from '@/pages/ShopCart/index.vue';
+import Trade from '@/pages/Trade/index.vue';
+import Pay from '@/pages/Pay/index.vue';
 export default [{
     path: "/home",
     component: Home,
@@ -53,6 +55,20 @@ export default [{
   {
     path: "/shopcart",
     component: ShopCart,
+    meta: {
+      show: true
+    },
+  },
+  {
+    path: "/trade",
+    component: Trade,
+    meta: {
+      show: true
+    },
+  },
+  {
+    path: "/pay",
+    component: Pay,
     meta: {
       show: true
     },
