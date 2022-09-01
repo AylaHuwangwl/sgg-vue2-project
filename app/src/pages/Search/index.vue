@@ -71,7 +71,7 @@
                 <div class="list-wrap">
                   <div class="p-img">
                     <a @click="toDetails(good.id)" target="_blank"
-                      ><img :src="good.defaultImg"
+                      ><img v-lazy="good.defaultImg"
                     /></a>
                   </div>
                   <div class="price">

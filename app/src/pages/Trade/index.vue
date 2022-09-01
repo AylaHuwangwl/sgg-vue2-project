@@ -129,8 +129,6 @@ export default {
   mounted() {
     this.$store.dispatch("getAdressInfo");
     this.$store.dispatch("getOrderInfo");
-    console.log(this.address);
-    console.log(this.orderInfo);
   },
   computed: {
     ...mapState({
@@ -151,17 +149,35 @@ export default {
       });
     },
     submitOrder() {
-      let traderNo = this.orderInfo.traderNo;
+      let traderNo = this.orderInfo.tradeNo;
+      // this.subInfo = {
+      //   consignee: this.userDefaultAddress.consignee, //最终收件人的名字
+      //   consigneeTel: this.userDefaultAddress.phoneNum, //最终收件人的手机号
+      //   deliveryAddress: this.userDefaultAddress.fullAddress, //收件人的地址
+      //   paymentWay: "ONLINE", //支付方式
+      //   orderComment: this.msg, //买家的留言信息
+      //   orderDetailList: this.orderInfo.detailArrayList, //商品清单
+      // };
       this.subInfo = {
-        consignee: this.userDefaultAddress.consignee, //最终收件人的名字
-        consigneeTel: this.userDefaultAddress.phoneNum, //最终收件人的手机号
-        deliveryAddress: this.userDefaultAddress.fullAddress, //收件人的地址
+        consignee: "12", //最终收件人的名字
+        consigneeTel: "000", //最终收件人的手机号
+        deliveryAddress: "biels", //收件人的地址
         paymentWay: "ONLINE", //支付方式
-        orderComment: this.msg, //买家的留言信息
+        orderComment: "9uewjkq", //买家的留言信息
         orderDetailList: this.orderInfo.detailArrayList, //商品清单
       };
       reqSubmitOrder(traderNo,this.subInfo).then((res) => {
-        console.log(res);
+        if(res.code === 200){
+          this.orderId = res.data;
+          this.$router.push({
+            path:'/pay',
+            query:{
+              orderId:this.orderId,
+            }
+          })
+        }else{
+          alert(res.message)
+        }
       });
     },
   },
