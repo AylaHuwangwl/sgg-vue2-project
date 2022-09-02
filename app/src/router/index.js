@@ -65,7 +65,6 @@ router.beforeEach(async (to, from, next) => {
    //方便测试 统一放行
   //  next();
   //获取仓库中的token-----可以确定用户是登录了
-  console.log(store.state.user.token);
    let token  = store.state.user.token;
    let name = store.state.user.userInfo.name;
    //用户登录了

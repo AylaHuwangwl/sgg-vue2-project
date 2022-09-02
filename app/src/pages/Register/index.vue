@@ -8,18 +8,18 @@
           >我有账号，去 <a href="login.html" target="_blank">登陆</a>
         </span>
       </h3>
-      <el-form label-width="150px" :model="form"  :rules="rules" ref="form">
-        <el-form-item label="手机号：" class="content">
+      <el-form label-width="150px" :model="form" :rules="rules" ref="form">
+        <el-form-item label="手机号：" class="content" prop="phone">
           <el-input
-          style="width:300px"
+            style="width: 300px"
             type="text"
             v-model="form.phone"
             placeholder="请输入你的手机号"
           ></el-input>
         </el-form-item>
-        <el-form-item label="验证码：" class="content">
+        <el-form-item label="验证码：" class="content" prop="code">
           <el-input
-          style="width:300px"
+            style="width: 300px"
             type="text"
             placeholder="请输入验证码"
             v-model="form.code"
@@ -28,25 +28,28 @@
             获取验证码
           </button>
         </el-form-item>
-        <el-form-item label="登陆密码：" class="content">
+        <el-form-item label="登陆密码：" class="content" prop="password">
           <el-input
-          style="width:300px"
+            style="width: 300px"
             type="password"
             placeholder="请输入你的登录密码"
             v-model="form.password"
           ></el-input>
         </el-form-item>
-        <el-form-item label="确认密码：" class="content">
+        <el-form-item label="确认密码：" class="content" prop="password1">
           <el-input
-          style="width:300px"
+            style="width: 300px"
             v-model="form.password1"
             type="password"
             placeholder="请输入确认密码"
           ></el-input>
         </el-form-item>
-        <el-form-item label="活动形式" class="content">
-          <el-checkbox v-model="form.agree"></el-checkbox>
-          <span>同意协议并注册《尚品汇用户协议》</span>
+        <el-form-item class="content" prop="agree">
+          <el-checkbox
+            v-model="form.agree"
+            label="同意协议并注册《尚品汇用户协议》"
+          ></el-checkbox>
+          <!-- <span>同意协议并注册《尚品汇用户协议》</span> -->
         </el-form-item>
       </el-form>
       <!-- <div class="content">
@@ -112,6 +115,39 @@
 export default {
   name: "Register",
   data() {
+    var phone = /^[1][3,4,5,7,8][0-9]{9}$/;
+    const checkPhone = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error("手机号不能为空"));
+      }
+      setTimeout(() => {
+        if (!phone.test(value)) {
+          callback(new Error("手机号格式有误"));
+        } else {
+          callback();
+        }
+      }, 500);
+    };
+    const validPass = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error("请输入密码"));
+      }
+      callback();
+      // else {
+      //   if (this.form.password1) {
+      //     this.$refs.form.validateField("validPass2");
+      //   }
+      // }
+    };
+    const valiPass2 = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error("请再次输入密码"));
+      } else if (value !== this.form.password) {
+        callback(new Error("两次输入密码不一致!"));
+      } else {
+        callback();
+      }
+    };
     return {
       form: {
         phone: "",
@@ -120,12 +156,21 @@ export default {
         password1: "",
         agree: true,
       },
-      rules:{},
+      rules: {
+        phone: [{ required: true, validator: checkPhone, trigger: "blur" }],
+        code: [{ required: true, message: "请输入验证码", trigger: "change" }],
+        password: [{ required: true, validator: validPass, trigger: "blur" }],
+        password1: [{ required: true, validator: valiPass2, trigger: "blur" }],
+        agree: [
+          { required: true, message: "请点击同意协议", trigger: "change" },
+        ],
+      },
     };
   },
   methods: {
     //获取验证码
     async getCode() {
+      console.log(this.form.agree);
       //简单判断一下---至少用数据
       try {
         //如果获取到验证码
@@ -135,22 +180,30 @@ export default {
         this.form.code = this.$store.state.user.code;
       } catch (error) {}
     },
-    async finishregister() {
+    finishregister() {
+      this.$refs.form.validate((valid) => {
+        if (valid) {
+          if (this.form.agree) {
+            try {
+              let { phone, code, password, password1 } = this.form;
+              phone &&
+                password &&
+                code &&
+                this.$store.dispatch("userRegister", {
+                  phone,
+                  code,
+                  password,
+                });
+              this.$router.push("/login");
+            } catch (error) {
+              alert(error.message);
+            }
+          }else{
+            alert("请同意协议");
+          }
+        }
+      });
       // 先处理业务再考虑表单验证
-      try {
-        let { phone, code, password, password1 } = this.form;
-        phone &&
-          password &&
-          code &&
-          (await this.$store.dispatch("userRegister", {
-            phone,
-            code,
-            password,
-          }));
-        this.$router.push("/login");
-      } catch (error) {
-        alert(error.message);
-      }
     },
   },
 };
