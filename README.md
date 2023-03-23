@@ -1,39 +1,19 @@
 # SGG_Vue2_Project
 
 #### 介绍
-{**以下是 Gitee 平台说明，您可以替换此简介**
-Gitee 是 OSCHINA 推出的基于 Git 的代码托管平台（同时支持 SVN）。专为开发者提供稳定、高效、安全的云端软件开发协作平台
-无论是个人、团队、或是企业，都能够用 Gitee 实现代码托管、项目管理、协作开发。企业项目请看 [https://gitee.com/enterprises](https://gitee.com/enterprises)}
-
-#### 软件架构
-软件架构说明
+该项目是用作自己个人练习的商城项目，包括登录，购物车，收藏，支付等业务功能，锻炼自己的实际开发能力
 
 
 #### 安装教程
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+1. npm install
+2. npm run serve
 
-#### 使用说明
-
-1.  xxxx
-2.  xxxx
-3.  xxxx
-
-#### 参与贡献
-
-1.  Fork 本仓库
-2.  新建 Feat_xxx 分支
-3.  提交代码
-4.  新建 Pull Request
-
-
-#### 特技
-
-1.  使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
-2.  Gitee 官方博客 [blog.gitee.com](https://blog.gitee.com)
-3.  你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解 Gitee 上的优秀开源项目
-4.  [GVP](https://gitee.com/gvp) 全称是 Gitee 最有价值开源项目，是综合评定出的优秀开源项目
-5.  Gitee 官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
-6.  Gitee 封面人物是一档用来展示 Gitee 会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
+#### 项目内容
+![输入图片说明](app/public/images/%E5%B0%9A%E5%93%81%E6%B1%87%E7%99%BB%E9%99%86%E9%A1%B5%E9%9D%A2.png)
+![输入图片说明](app/public/images/%E5%95%86%E5%93%81%E4%BC%9A%E5%95%86%E5%9F%8E%E9%A1%B9%E7%9B%AE%E9%A6%96%E9%A1%B5.png)
+![输入图片说明](app/public/images/%E8%B4%AD%E7%89%A9%E8%BD%A6.png)
+![输入图片说明](app/public/images/%E8%BF%99%E6%89%8D%E6%98%AF%E8%B4%AD%E7%89%A9%E8%BD%A6.png)
+![输入图片说明](app/public/images/%E6%8F%90%E4%BA%A4%E8%AE%A2%E5%8D%95%E9%A1%B5%E9%9D%A2.png)
+![输入图片说明](app/public/images/%E6%94%AF%E4%BB%98.png)
+![输入图片说明](app/public/images/%E6%94%AF%E4%BB%98%E6%88%90%E5%8A%9F.png)
